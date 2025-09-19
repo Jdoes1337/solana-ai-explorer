@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana AI Explorer</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: #0a0a0a;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .solscan-bg {
+            background: #0a0a0a;
+            min-height: 100vh;
+        }
+        
+        .solscan-header {
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .solscan-logo {
+            background: linear-gradient(135deg, #9945FF 0%, #14F195 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .solscan-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            transition: all 0.2s ease;
+        }
+        
+        .solscan-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #9945FF;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(153, 69, 255, 0.1);
+        }
+        
+        .solscan-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .solscan-btn {
+            background: linear-gradient(135deg, #9945FF 0%, #14F195 100%);
+            border: none;
+            border-radius: 8px;
+            color: #000000;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .solscan-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(153, 69, 255, 0.3);
+        }
+        
+        .solscan-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+        }
+        
+        .solscan-nav {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .solscan-nav-item {
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.2s ease;
+        }
+        
+        .solscan-nav-item:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .solscan-nav-item.active {
+            color: #9945FF;
+            background: rgba(153, 69, 255, 0.1);
+        }
+        
+        .solscan-stats {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .solscan-text-primary {
+            color: #ffffff;
+        }
+        
+        .solscan-text-secondary {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .solscan-text-accent {
+            color: #9945FF;
+        }
+        
+        .solscan-text-success {
+            color: #14F195;
+        }
+        
+        .solscan-text-warning {
+            color: #FFA500;
+        }
+        
+        .solscan-text-danger {
+            color: #FF6B6B;
+        }
+        
+        .solscan-border {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .solscan-hover:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+        }
+        
+        .solscan-transition {
+            transition: all 0.2s ease;
+        }
+        
+        .solscan-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .solscan-gradient {
+            background: linear-gradient(135deg, #9945FF 0%, #14F195 100%);
+        }
+        
+        .solscan-gradient-text {
+            background: linear-gradient(135deg, #9945FF 0%, #14F195 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="solscan-bg">
+    <!-- Header -->
+    <header class="solscan-header sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold solscan-logo">Solana AI Explorer</h1>
+                    </div>
+                </div>
+                
+                <!-- Navigation -->
+                <div class="flex items-center space-x-4">
+                    <button class="solscan-nav-item px-3 py-2 rounded-md text-sm font-medium active">
+                        AI Explorer
+                    </button>
+                    <button class="solscan-nav-item px-3 py-2 rounded-md text-sm font-medium">
+                        Blocks
+                    </button>
+                    <button class="solscan-nav-item px-3 py-2 rounded-md text-sm font-medium">
+                        Transactions
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center justify-center w-20 h-20 solscan-gradient rounded-2xl mb-8">
+                <i class="fas fa-robot text-3xl text-black"></i>
+            </div>
+            <h1 class="text-6xl font-bold solscan-gradient-text mb-2 tracking-tight">
+                Solana Blockchain Analysis
+            </h1>
+            <h2 class="text-2xl font-semibold solscan-text-secondary mb-6">
+                Powered by AI
+            </h2>
+            <p class="text-xl solscan-text-secondary max-w-3xl mx-auto leading-relaxed">
+                Ask complex questions about the Solana blockchain in natural language. 
+                Get instant insights with AI-powered analysis.
+            </p>
+        </div>
+
+        <!-- AI Query Section -->
+        <div class="max-w-4xl mx-auto mb-12">
+            <div class="solscan-card p-8">
+                <div class="mb-8">
+                    <label for="queryInput" class="block solscan-text-primary text-lg font-semibold mb-4">
+                        Ask a question about Solana blockchain data
+                    </label>
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="queryInput" 
+                            placeholder="e.g., 'search the addresses that interacted with 9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM in the past week'"
+                            class="solscan-input w-full px-6 py-5 text-lg pr-20"
+                        >
+                        <button 
+                            id="searchBtn" 
+                            class="solscan-btn absolute right-2 top-1/2 transform -translate-y-1/2 px-6 py-3"
+                        >
+                            <i class="fas fa-search mr-2"></i>
+                            Search
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Example Queries -->
+                <div class="mb-8">
+                    <p class="solscan-text-secondary text-sm mb-4 font-medium">Try these example queries:</p>
+                    <div class="grid grid-cols-4 gap-3">
+                        <div class="p-3 rounded-lg border solscan-border text-center">
+                            <div class="flex flex-col items-center">
+                                <i class="fas fa-users text-lg solscan-text-accent mb-2"></i>
+                                <div class="text-xs font-semibold solscan-text-primary">Wallet Interactions</div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-3 rounded-lg border solscan-border text-center">
+                            <div class="flex flex-col items-center">
+                                <i class="fas fa-shopping-cart text-lg solscan-text-success mb-2"></i>
+                                <div class="text-xs font-semibold solscan-text-primary">Token Purchases & PnL</div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-3 rounded-lg border solscan-border text-center">
+                            <div class="flex flex-col items-center">
+                                <i class="fas fa-history text-lg solscan-text-warning mb-2"></i>
+                                <div class="text-xs font-semibold solscan-text-primary">Transaction History</div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-3 rounded-lg border solscan-border text-center">
+                            <div class="flex flex-col items-center">
+                                <i class="fas fa-wallet text-lg solscan-text-accent mb-2"></i>
+                                <div class="text-xs font-semibold solscan-text-primary">Token Balances</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="hidden">
+            <div class="solscan-card p-12 text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 solscan-gradient rounded-full mb-6">
+                    <i class="fas fa-spinner fa-spin text-2xl text-black"></i>
+                </div>
+                <h3 class="text-2xl font-semibold solscan-text-primary mb-2">Processing your query</h3>
+                <p class="solscan-text-secondary">Analyzing blockchain data with AI...</p>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="results">
+            <!-- Results will be populated here -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t solscan-border mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center mb-4">
+                    <h3 class="text-xl font-bold solscan-logo mr-3">Solana AI Explorer</h3>
+                </div>
+                <p class="solscan-text-secondary text-sm">
+                    Powered by OpenAI GPT-4 and Solana Web3.js • Built for the future of blockchain analytics
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3001/api';
+        
+        // DOM elements
+        const queryInput = document.getElementById('queryInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const results = document.getElementById('results');
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Focus on the query input for better UX
+            queryInput.focus();
+        });
+
+        // Event listeners
+        searchBtn.addEventListener('click', handleSearch);
+        queryInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSearch();
+            }
+        });
+
+
+        async function handleSearch() {
+            const query = queryInput.value.trim();
+            if (!query) {
+                alert('Please enter a query');
+                return;
+            }
+
+            showLoading();
+            hideResults();
+
+            // Check for specific mock queries
+            if (query.toLowerCase().includes('show me all the wallets that interacted with the wallet xyz123')) {
+                setTimeout(() => {
+                    hideLoading();
+                    displayMockWalletInteractions();
+                }, 1500);
+                return;
+            }
+
+            if (query.toLowerCase().includes('show me all the tokens the wallet xyz123 purchased in the past week')) {
+                setTimeout(() => {
+                    hideLoading();
+                    displayMockTokenPurchases();
+                }, 1500);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayResults(data.data);
+                } else {
+                    displayError(data.error || 'Failed to process query');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                displayError('Failed to connect to the server. Make sure the backend is running.');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function showLoading() {
+            loadingIndicator.classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            loadingIndicator.classList.add('hidden');
+        }
+
+        function hideResults() {
+            results.innerHTML = '';
+        }
+
+        function displayResults(data) {
+            const { query, data: resultData, response } = data;
+            
+            results.innerHTML = `
+                <div class="solscan-card p-8 mb-8">
+                    <div class="flex items-center mb-6">
+                        <div class="inline-flex items-center justify-center w-12 h-12 solscan-gradient rounded-xl mr-4">
+                            <i class="fas fa-robot text-xl text-black"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold solscan-text-primary">AI Response</h2>
+                    </div>
+                    <div class="bg-black/20 rounded-xl p-6 mb-6 border solscan-border">
+                        <p class="solscan-text-primary leading-relaxed text-lg">${response}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="solscan-stats p-6">
+                            <h3 class="solscan-text-primary font-semibold mb-4 flex items-center">
+                                <i class="fas fa-info-circle solscan-text-accent mr-2"></i>
+                                Query Details
+                            </h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="solscan-text-secondary">Intent:</span>
+                                    <span class="solscan-text-primary font-medium">${query.intent}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="solscan-text-secondary">Confidence:</span>
+                                    <span class="solscan-text-accent font-semibold">${(query.confidence * 100).toFixed(1)}%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="solscan-stats p-6">
+                            <h3 class="solscan-text-primary font-semibold mb-4 flex items-center">
+                                <i class="fas fa-tags solscan-text-accent mr-2"></i>
+                                Entities Found
+                            </h3>
+                            <div class="space-y-2">
+                                ${Object.entries(query.entities).map(([key, value]) => 
+                                    value ? `
+                                    <div class="flex justify-between">
+                                        <span class="solscan-text-secondary">${key}:</span>
+                                        <span class="solscan-text-primary font-medium">${value}</span>
+                                    </div>
+                                    ` : ''
+                                ).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="solscan-card p-8">
+                    <div class="flex items-center mb-6">
+                        <div class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl mr-4">
+                            <i class="fas fa-database text-xl text-white"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold solscan-text-primary">Raw Data</h2>
+                    </div>
+                    <div class="bg-black/30 rounded-xl p-6 border solscan-border">
+                        <pre class="solscan-text-primary text-sm overflow-x-auto whitespace-pre-wrap">${JSON.stringify(resultData, null, 2)}</pre>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayError(error) {
+            results.innerHTML = `
+                <div class="solscan-card p-8">
+                    <div class="text-center">
+                        <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-red-500 to-pink-600 rounded-full mb-6">
+                            <i class="fas fa-exclamation-triangle text-3xl text-white"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold solscan-text-primary mb-4">Error</h2>
+                        <p class="solscan-text-secondary text-lg">${error}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayMockWalletInteractions() {
+            const mockData = {
+                wallet_address: "xyz123...abc",
+                total_interactions: 47,
+                timeframe: "All time",
+                interactions: [
+                    { address: "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM", type: "Token Transfer", count: 12, last_seen: "2 hours ago" },
+                    { address: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU", type: "DEX Swap", count: 8, last_seen: "1 day ago" },
+                    { address: "5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1", type: "NFT Purchase", count: 5, last_seen: "3 days ago" },
+                    { address: "3xJ3...kL9m", type: "Staking", count: 3, last_seen: "1 week ago" },
+                    { address: "8xK2...pQ7n", type: "DeFi Protocol", count: 19, last_seen: "4 hours ago" }
+                ]
+            };
+
+            results.innerHTML = `
+                <div class="solscan-card p-8 mb-8">
+                    <div class="flex items-center mb-6">
+                        <div class="inline-flex items-center justify-center w-12 h-12 solscan-gradient rounded-xl mr-4">
+                            <i class="fas fa-users text-xl text-black"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold solscan-text-primary">Wallet Interactions</h2>
+                    </div>
+                    
+                    <div class="bg-black/20 rounded-xl p-6 mb-6 border solscan-border">
+                        <p class="solscan-text-primary leading-relaxed text-lg mb-4">
+                            Found <span class="solscan-text-accent font-semibold">${mockData.total_interactions}</span> unique wallet interactions for address <span class="solscan-text-accent font-mono">${mockData.wallet_address}</span>.
+                        </p>
+                        <p class="solscan-text-secondary">
+                            These wallets have transacted with the target wallet across various protocols including DEXs, NFT marketplaces, and DeFi applications.
+                        </p>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <h3 class="text-xl font-semibold solscan-text-primary mb-4">Top Interacting Wallets</h3>
+                        ${mockData.interactions.map(interaction => `
+                            <div class="solscan-stats p-4 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-4">
+                                        <i class="fas fa-wallet text-white text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-mono text-sm solscan-text-primary">${interaction.address}</div>
+                                        <div class="text-xs solscan-text-secondary">${interaction.type} • ${interaction.count} transactions</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm solscan-text-accent font-semibold">${interaction.count} txns</div>
+                                    <div class="text-xs solscan-text-secondary">${interaction.last_seen}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayMockTokenPurchases() {
+            const mockData = {
+                wallet_address: "xyz123...abc",
+                timeframe: "Past 7 days",
+                total_tokens: 8,
+                total_pnl: "+$2,847.50",
+                trades: [
+                    { token: "SOL", symbol: "SOL", amount: "150.5", price: "$98.45", pnl: "+$1,234.50", pnl_percent: "+12.4%", date: "2 days ago" },
+                    { token: "RAY", symbol: "RAY", amount: "2,500", price: "$2.34", pnl: "+$456.20", pnl_percent: "+8.7%", date: "3 days ago" },
+                    { token: "SRM", symbol: "SRM", amount: "1,200", price: "$1.89", pnl: "-$123.40", pnl_percent: "-5.2%", date: "4 days ago" },
+                    { token: "ORCA", symbol: "ORCA", amount: "800", price: "$3.45", pnl: "+$678.90", pnl_percent: "+24.6%", date: "5 days ago" },
+                    { token: "MNGO", symbol: "MNGO", amount: "50,000", price: "$0.023", pnl: "+$89.30", pnl_percent: "+7.8%", date: "6 days ago" }
+                ]
+            };
+
+            results.innerHTML = `
+                <div class="solscan-card p-8 mb-8">
+                    <div class="flex items-center mb-6">
+                        <div class="inline-flex items-center justify-center w-12 h-12 solscan-gradient rounded-xl mr-4">
+                            <i class="fas fa-shopping-cart text-xl text-black"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold solscan-text-primary">Token Purchases & PnL</h2>
+                    </div>
+                    
+                    <div class="bg-black/20 rounded-xl p-6 mb-6 border solscan-border">
+                        <p class="solscan-text-primary leading-relaxed text-lg mb-4">
+                            Analysis of token purchases for wallet <span class="solscan-text-accent font-mono">${mockData.wallet_address}</span> over the <span class="solscan-text-accent font-semibold">${mockData.timeframe}</span>.
+                        </p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold solscan-text-accent">${mockData.total_tokens}</div>
+                                <div class="text-sm solscan-text-secondary">Tokens Purchased</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold solscan-text-success">${mockData.total_pnl}</div>
+                                <div class="text-sm solscan-text-secondary">Total PnL</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <h3 class="text-xl font-semibold solscan-text-primary mb-4">Token Trades with PnL</h3>
+                        ${mockData.trades.map(trade => `
+                            <div class="solscan-stats p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-3">
+                                            <span class="text-white text-xs font-bold">${trade.symbol.charAt(0)}</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold solscan-text-primary">${trade.symbol}</div>
+                                            <div class="text-xs solscan-text-secondary">${trade.amount} tokens @ ${trade.price}</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-sm font-semibold ${trade.pnl.startsWith('+') ? 'solscan-text-success' : 'solscan-text-danger'}">${trade.pnl}</div>
+                                        <div class="text-xs ${trade.pnl_percent.startsWith('+') ? 'solscan-text-success' : 'solscan-text-danger'}">${trade.pnl_percent}</div>
+                                    </div>
+                                </div>
+                                <div class="text-xs solscan-text-secondary">${trade.date}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
