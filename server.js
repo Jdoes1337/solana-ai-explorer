@@ -51,6 +51,14 @@ app.use('/api/query', require('./routes/query'));
 app.use('/api/blockchain', require('./routes/blockchain'));
 app.use('/api/health', require('./routes/health'));
 
+// Serve static files
+app.use(express.static('client'));
+
+// Serve frontend at root
+app.get('/', (req, res) => {
+  res.sendFile('index.html', { root: 'client' });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -68,6 +76,8 @@ app.use('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🌐 Health check available at: http://localhost:${PORT}/api/health`);
+  console.log(`🎯 Frontend available at: http://localhost:${PORT}/client/index.html`);
 });
 
 module.exports = app;

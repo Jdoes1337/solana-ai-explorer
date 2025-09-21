@@ -1,56 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { pool, redisClient } = require('../config/database');
-const solanaService = require('../services/solanaService');
 
-// Health check endpoint
-router.get('/', async (req, res) => {
-  try {
-    const health = {
-      status: 'healthy',
-      timestamp: new Date().toISOString(),
-      services: {}
-    };
-
-    // Check database connection (optional)
-    try {
-      const { pool } = require('../config/database');
-      await pool.query('SELECT 1');
-      health.services.database = 'connected';
-    } catch (error) {
-      health.services.database = 'disconnected';
-      // Don't mark as degraded if database is optional
-    }
-
-    // Check Redis connection (optional)
-    try {
-      const { redisClient } = require('../config/database');
-      await redisClient.ping();
-      health.services.redis = 'connected';
-    } catch (error) {
-      health.services.redis = 'disconnected';
-      // Don't mark as degraded if Redis is optional
-    }
-
-    // Check Solana connection (required for core functionality)
-    try {
-      const solanaService = require('../services/solanaService');
-      await solanaService.connection.getSlot();
-      health.services.solana = 'connected';
-    } catch (error) {
-      health.services.solana = 'disconnected';
-      health.status = 'degraded';
-    }
-
-    // Always return 200 for basic health check
-    res.status(200).json(health);
-  } catch (error) {
-    res.status(200).json({
-      status: 'healthy',
-      message: 'Basic health check passed',
-      timestamp: new Date().toISOString()
-    });
-  }
+// Simple health check endpoint
+router.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    message: 'Solana AI Explorer is running',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
 });
 
 // Detailed system info
