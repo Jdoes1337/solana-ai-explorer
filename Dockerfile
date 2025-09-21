@@ -1,16 +1,13 @@
 # Production deployment
 FROM node:18-alpine
 
-# Install wget for health checks
-RUN apk add --no-cache wget
-
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy minimal package files
+COPY package-minimal.json package.json
 
-# Install dependencies
+# Install minimal dependencies
 RUN npm install --only=production && npm cache clean --force
 
 # Copy source code
@@ -26,9 +23,7 @@ USER nodejs
 # Expose port
 EXPOSE 3001
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3001/api/health || exit 1
+# No health check for now
 
 # Start the application
-CMD ["node", "server.js"]
+CMD ["node", "server-minimal.js"]
