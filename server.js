@@ -5,6 +5,20 @@ const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
+// Initialize database connections (optional for basic functionality)
+let dbInitialized = false;
+try {
+  const { initConnections } = require('./config/database');
+  initConnections().then(() => {
+    dbInitialized = true;
+    console.log('✅ Database connections initialized');
+  }).catch(err => {
+    console.log('⚠️ Database connections failed, running without database:', err.message);
+  });
+} catch (error) {
+  console.log('⚠️ Database module not available, running without database');
+}
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
